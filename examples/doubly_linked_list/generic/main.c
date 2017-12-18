@@ -24,6 +24,9 @@ int main()
     char arr1[] = {'c', 'a', 'e', 'd', 'f'};
     arr_heap* heap1 = arr_heap_alloc(arr1, sizeof(arr1)/sizeof(arr1[0]));
 
+    char arr2[] = {'y', 'a', 'd', 'z', 'f'};
+    arr_heap* heap2 = arr_heap_alloc(arr2, sizeof(arr2)/sizeof(arr2[0]));
+
     // dll
 
     dll_node* dll_head = NULL;
@@ -34,9 +37,16 @@ int main()
     arr_heap_heapify(heap);
     arr_heap_remove(heap, arr_heap_find(heap, 'c'));
 
+    arr_heap_heapify(heap1);
+    arr_heap_heapify(heap2);
+
     dll_insert(
-        dll_insert(dll_head, heap),
-    heap1);
+        dll_insert(
+            dll_insert(
+                dll_head,
+            heap),
+        heap1),
+    heap2);
 
     dll_list_print(dll_head);
 
