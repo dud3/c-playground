@@ -1,0 +1,20 @@
+#ifndef _DLL_H_
+#define _DLL_H_
+
+typedef struct dll_list dll_list;
+typedef struct dll_node dll_node;
+
+dll_node* dll_node_create(void *data);
+dll_node* dll_list_create();
+dll_node* dll_find(dll_node* node, int n);
+dll_node* dll_insert(dll_node* after_node, void *data);
+dll_node* dll_node_head_get();
+dll_node* dll_node_tail_get();
+
+inline void dll_node_destroy(dll_node* node);
+inline void dll_list_destroy();
+void dll_node_print(dll_node* node);
+void dll_list_print(dll_node* head);
+void dll_list_printr(dll_node* node);
+
+#endif // _DLL_H_

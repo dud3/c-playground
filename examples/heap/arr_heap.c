@@ -5,48 +5,58 @@
 
 #include "arr_heap.h"
 
-arr_heap* the_arr_heap = NULL;
+// For singleton, remove arr_heap* heap parameter
+// replace heap with the_arr_heap
+// arr_heap* the_arr_heap = NULL;
+
+struct arr_heap
+{
+    int size;
+    char *data;
+};
 
 int cursor;
 
 arr_heap* arr_heap_alloc(char arr[], int n)
 {
-    the_arr_heap = (arr_heap*) malloc((n) * sizeof(int));
+    arr_heap* heap = (arr_heap*) malloc(sizeof(arr_heap));
 
-    for(cursor = 0; cursor < n; cursor++)
+    heap->data = (char *) malloc(n * sizeof(char));
+
+    for(heap->size = 0; heap->size < n; heap->size++)
     {
-        *(the_arr_heap + cursor) = arr[cursor];
+        *(heap->data + heap->size) = arr[heap->size];
     }
 
-    cursor--;
+    heap->size--;
 
-    return the_arr_heap;
+    return heap;
 }
 
-void arr_heap_insert(char n)
+void arr_heap_insert(arr_heap *heap, char n)
 {
-    char* realloc_arr = realloc(the_arr_heap, (cursor + 2) * sizeof(char));
+    char* realloc_data = realloc(heap->data, (heap->size + 2) * sizeof(char));
 
-    if(realloc_arr == NULL)
+    if(realloc_data == NULL)
     {
         fprintf(stderr,
             "Array uninitialized! use arr_heap_alloc(char n) Aborting...\n");
         exit(EXIT_FAILURE);
     }
 
-    the_arr_heap = realloc_arr;
+    heap->data = realloc_data;
 
-    *(the_arr_heap + (++cursor)) = n;
+    *(heap->data + (++heap->size)) = n;
 
-    swim(cursor);
+    swim(heap, heap->size);
 }
 
-int arr_heap_find(char n)
+int arr_heap_find(arr_heap *heap, char n)
 {
     int i;
-    for(i = 0; i < cursor; i++)
+    for(i = 0; i < heap->size; i++)
     {
-        if(*(the_arr_heap + i) == n) {
+        if(*(heap->data + i) == n) {
             return i;
         }
     }
@@ -54,22 +64,28 @@ int arr_heap_find(char n)
     return -1;
 }
 
-inline void arr_heap_remove_top()
+inline void arr_heap_remove_top(arr_heap *heap)
 {
-    arr_heap_remove(0);
+    arr_heap_remove(heap, 0);
 }
 
-inline void arr_heap_remove(int i)
+inline void arr_heap_remove(arr_heap *heap, int i)
 {
-    arr_heap_swap(i, cursor);
+    arr_heap_swap(heap, i, heap->size);
 
-    if(cursor != -1) {
-        *(the_arr_heap + cursor) = 0;
+    if(heap->size != -1) {
+        *(heap->data + heap->size) = 0;
     }
 
-    cursor--;
+    heap->size--;
 
-    sink(i);
+    sink(heap, i);
+}
+
+inline void arr_heap_destroy(arr_heap *heap)
+{
+    free(heap);
+    heap->size = 0;
 }
 
 inline int arr_heap_child_left(int cursor)
@@ -105,13 +121,13 @@ inline int arr_heap_parent(int cursor)
     return floor((double)(cursor - 1) / 2);
 }
 
-inline void swim(int i)
+inline void swim(arr_heap *heap, int i)
 {
     int parent = arr_heap_parent(i);
-    while( *(the_arr_heap + parent) < *(the_arr_heap + i) )
+    while( *(heap->data + parent) < *(heap->data + i) )
     {
         // swap
-        arr_heap_swap(i, parent);
+        arr_heap_swap(heap, i, parent);
 
         i = parent;
         parent = arr_heap_parent(i);
@@ -120,71 +136,76 @@ inline void swim(int i)
     }
 }
 
-inline void sink(int i)
+inline void sink(arr_heap *heap, int i)
 {
     if(i >= 0)
     {
         int swap = 0;
 
-        while(cursor > swap)
+        while(heap->size > swap)
         {
             int left = arr_heap_child_left(i);
             int right = arr_heap_child_right(i);
 
-            if(the_arr_heap[left] > the_arr_heap[right])
+            if(heap->data[left] > heap->data[right])
                 swap = left;
             else
                 swap = right;
 
-            if(the_arr_heap[i] > the_arr_heap[swap]) break;
+            if(heap->data[i] > heap->data[swap]) break;
 
-            arr_heap_swap(i, swap);
+            arr_heap_swap(heap, i, swap);
             i = swap;
         }
     }
 }
 
-void arr_heap_heapify()
+void arr_heap_heapify(arr_heap *heap)
 {
     int i;
-    for(i = 1; i <= cursor; i++)
+    for(i = 1; i <= heap->size; i++)
     {
         int index = i;
         while(index != 0)
         {
             int parent = arr_heap_parent(index);
 
-            if(the_arr_heap[parent] >= the_arr_heap[index]) break;
+            if(heap->data[parent] >= heap->data[index]) break;
 
-            arr_heap_swap(index, parent);
+            arr_heap_swap(heap, index, parent);
 
             index = parent;
         }
     }
 }
 
-void arr_heap_swap(int i, int j)
+void arr_heap_swap(arr_heap *heap, int i, int j)
 {
-    int tmp = the_arr_heap[i];
-    the_arr_heap[i] = the_arr_heap[j];
-    the_arr_heap[j] = tmp;
+    int tmp = heap->data[i];
+    heap->data[i] = heap->data[j];
+    heap->data[j] = tmp;
 }
 
-void arr_heap_print()
+void arr_heap_node_print(arr_heap *heap, int i)
+{
+    printf("%c\t", *((char *)(heap->data + i)));
+}
+
+void arr_heap_print(arr_heap *heap)
 {
     printf("\n");
 
     int i;
-    for(i = 0; i <= cursor; i++)
+    for(i = 0; i <= heap->size; i++)
     {
         printf("%d\t", i);
     }
 
     printf("\n");
 
-    for(i = 0; i <= cursor; i++)
+    for(i = 0; i <= heap->size; i++)
     {
-        printf("%c\t", the_arr_heap[i]);
+        arr_heap_node_print(heap, i);
     }
 
     printf("\n");
