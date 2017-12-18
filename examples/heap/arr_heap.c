@@ -15,8 +15,6 @@ struct arr_heap
     char *data;
 };
 
-int cursor;
-
 arr_heap* arr_heap_alloc(char arr[], int n)
 {
     arr_heap* heap = (arr_heap*) malloc(sizeof(arr_heap));
@@ -88,37 +86,37 @@ inline void arr_heap_destroy(arr_heap *heap)
     heap->size = 0;
 }
 
-inline int arr_heap_child_left(int cursor)
+inline int arr_heap_child_left(int i)
 {
-    if(cursor < 0) return -1;
-    // 2 x currsor + 1
-    return 2 * cursor + 1;
+    if(i < 0) return -1;
+
+    return 2 * i + 1;
 }
 
-inline int arr_heap_child_right(int cursor)
+inline int arr_heap_child_right(int i)
 {
-    if(cursor < 0) return -1;
-    // 2 x currsor + 2
-    return 2 * cursor + 2;
+    if(i < 0) return -1;
+
+    return 2 * i + 2;
 }
 
-inline int arr_heap_sibling_left(int cursor)
+inline int arr_heap_sibling_left(int i)
 {
-    if(cursor < 0) return -1;
+    if(i < 0) return -1;
 
-    return cursor - 1;
+    return i - 1;
 }
 
-inline int arr_heap_sibling_right(int cursor)
+inline int arr_heap_sibling_right(int i)
 {
-    if(cursor <= 0) return -1;
+    if(i <= 0) return -1;
 
-    return cursor + 1;
+    return i + 1;
 }
 
-inline int arr_heap_parent(int cursor)
+inline int arr_heap_parent(int i)
 {
-    return floor((double)(cursor - 1) / 2);
+    return floor((double)(i - 1) / 2);
 }
 
 inline void swim(arr_heap *heap, int i)
