@@ -5,9 +5,11 @@
 
 int main() {
 	Point* point = point_unit(); 
-	List* list = list_create(point_print, lambda, lambda);
-
 	point_add(point, point_new_i(2,2));
+
+	/* create list */
+
+	List* list = list_create(point_print, lambda, lambda);
 
 	list_push(list, point);
 	list_push(list, point_new(1,1));
@@ -18,10 +20,16 @@ int main() {
 
 	printf("length/size: %d\n", list->size);
 
+	/* traverse */
+
 	void point_traverse(void* data) {
 		Point* point = (Point*) data;
 		point_print(point);
 	}
+
+	list_traverse(list, point_traverse);
+
+	/* map Point to double */
 
 	void double_print(void* n) {
 		double* _n = (double*) n;
@@ -40,15 +48,15 @@ int main() {
 
 	list_print(dobule_list);
 
-	// ---
-
-	list_traverse(list, point_traverse);
+	/* int list */
 
 	List* list_int = list_create(util_print_int, lambda, lambda);
 	list_push(list_int, util_int_p(0));
 	list_push(list_int, util_int_p(1));
 
 	list_print(list_int);
+
+	/* other util stuff */
 
 	util_print_int(util_int_p(1));
 	util_print_double(util_double_p(2.0f));
