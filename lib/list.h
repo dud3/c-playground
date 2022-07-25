@@ -10,7 +10,7 @@ typedef struct Node {
 typedef struct List {
 	int size;
 	struct Node* head;
-	struct Node* last;
+	struct Node* tail;
 	
 	void (*print)(void *data);
 	void (*create)(void *data);
@@ -44,9 +44,9 @@ void list_push(List* list, void* data) {
 	
 	if (list->head == NULL) { 
 		list->head = new_node;
-		list->last = list->head;
+		list->tail = list->head;
 	} else {
-		list->last = new_node;
+		list->tail = new_node;
 
 		/* Current node */
 		Node* curr_node = list->head;
