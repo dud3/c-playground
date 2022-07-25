@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "types.h"
 
 typedef struct Node {
 	void* data;
@@ -101,6 +102,19 @@ List* list_map(List* list, List* dest, void (*fn)(List*, void* data)) {
 	}
 
 	return dest;
+}
+
+void* list_find(List* list, bool (*fn)(void* data)) {
+	Node* cnode = list->head;
+
+	while (cnode != NULL) {
+		if ((*fn)(cnode->data)) {
+			return cnode->data;
+		}
+		cnode = cnode->next;
+	}
+
+	return NULL;
 }
 
 void list_print(List* list) {

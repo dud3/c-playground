@@ -9,16 +9,16 @@ int main() {
 
 	/* create list */
 
-	List* list = list_create(point_print, lambda, lambda);
+	List* list_point = list_create(point_print, lambda, lambda);
 
-	list_push(list, point);
-	list_push(list, point_new(1,1));
+	list_push(list_point, point);
+	list_push(list_point, point_new(1,1));
 
-	list_print(list);
+	list_print(list_point);
 
 	/* size */
 
-	printf("length/size: %d\n", list->size);
+	printf("length/size: %d\n", list_point->size);
 
 	/* traverse */
 
@@ -27,7 +27,7 @@ int main() {
 		point_print(point);
 	}
 
-	list_traverse(list, point_traverse);
+	list_traverse(list_point, point_traverse);
 
 	/* map Point to double */
 
@@ -42,11 +42,22 @@ int main() {
 	}
 
 	// List* dobule_list = list_create(double_print, lambda, lambda);
-	List* dobule_list = list_map(list, 
+	List* list_double = list_map(list_point, 
 		list_create(double_print, lambda, lambda),
 		point_to_int);
 
-	list_print(dobule_list);
+	list_print(list_double);
+
+	/* find in list */
+
+        bool point_find(void* data) {
+                Point* point = (Point*) data;
+                if (point->x == 2) return true;
+
+                return false;
+        }
+
+        Point* the_point = list_find(list_point, point_find);
 
 	/* int list */
 
