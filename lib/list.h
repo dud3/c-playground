@@ -84,15 +84,6 @@ void list_traverse(List* list, void (*fn)(void* data)) {
 	}
 }
 
-/*
-#define list_map(s, d, f, n) \
-do {                         \
-   unsigned i;               \
-   for (i = 0; i<n; i++)     \
-      d[i] = f(s[i]);        \
-} while (0)
-*/
-
 List* list_map(List* list, List* dest, void (*fn)(List*, void* data)) {
 	Node* cnode = list->head;
 
