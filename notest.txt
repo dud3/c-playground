@@ -1,0 +1,4 @@
+# Compile
+	# SDL2
+		gcc sdl_test.c -o pc1 -I/home/dud3/git/playground/c-playground/extern/include/SDL/SDL2 -L/home/dud3/git/playground/c-playground/extern/lib/linux/64/SDL -lSDL2main -lSDL2
+
