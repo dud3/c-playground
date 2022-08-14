@@ -4,7 +4,7 @@
 #include "point.h"
 
 int main() {
-	Point* point = point_unit(); 
+	Point* point = point_unit();
 	point_add(point, point_new_i(2,2));
 
 	/* create list */
@@ -42,7 +42,7 @@ int main() {
 	}
 
 	// List* dobule_list = list_create(double_print, lambda, lambda);
-	List* list_double = list_map(list_point, 
+	List* list_double = list_map(list_point,
 		list_create(double_print, lambda, lambda),
 		point_to_int);
 
@@ -50,14 +50,14 @@ int main() {
 
 	/* find in list */
 
-        bool point_find(void* data) {
-                Point* point = (Point*) data;
-                if (point->x == 2) return true;
+	bool point_find(void* data) {
+			Point* point = (Point*) data;
+			if (point->x == 2) return true;
 
-                return false;
-        }
+			return false;
+	}
 
-        Point* the_point = list_find(list_point, point_find);
+	Point* the_point = list_find(list_point, point_find);
 
 	/* int list */
 

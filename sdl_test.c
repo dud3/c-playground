@@ -33,7 +33,7 @@ int main() {
 	}
 
 	// Rect
-	
+
 	SDL_Rect rect;
 
 	rect.w = 200;
@@ -43,7 +43,7 @@ int main() {
 	rect.y = SCREEN_HEIGHT / 2 - rect.h / 2;
 
 	bool quit = false;
-	
+
 	// Event loop
 	while(!quit)
         {

@@ -12,7 +12,7 @@ typedef struct List {
 	int size;
 	struct Node* head;
 	struct Node* tail;
-	
+
 	void (*print)(void *data);
 	void (*create)(void *data);
 	void (*remove)(void *data);
@@ -24,12 +24,12 @@ Node* list_create_node(void* data) {
 	node->next = NULL;
 	node->prev = NULL;
 	node->data = data;
-	
+
 	return node;
 }
 
 List* list_create(void (*print)(void *data)
-		,void (*create)(void *data) 
+		,void (*create)(void *data)
 		,void (*remove)(void *data)
 		) {
 	List* list = (List*) malloc(sizeof(List));
@@ -42,8 +42,8 @@ List* list_create(void (*print)(void *data)
 
 void list_push(List* list, void* data) {
 	Node* new_node = list_create_node(data);
-	
-	if (list->head == NULL) { 
+
+	if (list->head == NULL) {
 		list->head = new_node;
 		list->tail = list->head;
 	} else {
@@ -56,7 +56,7 @@ void list_push(List* list, void* data) {
 		while(curr_node->next != NULL) {
 			curr_node = curr_node->next;
 		}
-		
+
 		/* Last node's next is the new node */
 		curr_node->next = new_node;
 

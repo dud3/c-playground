@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "sdl.h": "c",
+        "sdl_events.h": "c",
+        "stdio.h": "c",
+        "window_manager.h": "c"
+    }
+}
