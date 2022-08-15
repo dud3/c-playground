@@ -7,18 +7,32 @@
 
 int main()
 {
-	WindowManager* vm = window_manager_create(400, 400);
+	void on_update(WindowManager_dt dt)
+        {
+                // printf("WindowManager_dt: %f\n", dt);
+        }
+	void on_render(WindowManager_dt dt)
+	{
 
-    void on_update(WindowManager_dt dt) {
-        // printf("WindowManager_dt: %f\n", dt);
-    }
-    void on_event(void *e0, void* e1) {
-        SDL_Keycode* k = (SDL_Keycode*) e0;
-        printf("Keycode: %d\n", *k);
-    }
+	}
+        void on_key_down(SDL_Keycode keycode)
+        {
+                printf("OnKeyDown: %d\n", keycode);
+        }
+	void on_key_up(SDL_Keycode keycode)
+	{
+		printf("OnKeyUp: %d\n", keycode);
+	}
 
-    window_manager_render(vm, on_event, on_update, on_update);
+	WindowManager* wm = window_manager_create(400, 400);
 
-    return 0;
+	wm->on_update = on_update;
+	wm->on_render = on_render;
+	wm->events.onkeydown = on_key_down;
+	wm->events.onkeyup = on_key_up;
+
+    	window_manager_main_loop(wm);
+
+    	return 0;
 }
 

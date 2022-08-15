@@ -17,4 +17,3 @@ void dll_list_print(dll_node* head);
 void dll_list_printr(dll_node* node);
 
 #endif // _DLL_H_
-

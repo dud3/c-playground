@@ -41,16 +41,20 @@ WindowManager* window_manager_create(int width, int height) {
 }
 
 float dt = 0.0f; // delta time
-bool window_manager_render(WindowManager* wm,
-        void (*on_event)(void* d0, void* d1),
-        void (*on_update)(WindowManager_dt dt),
-        void (*on_render)(WindowManager_dt dt))
+bool window_manager_main_loop(WindowManager* wm)
 {
         bool quit = false;
 
-        // note: why does passing wm->renderer directly to SDL_SetRenderDrawColor
+        // note: why does passing wm->renderer
+	// directly to SDL_SetRenderDrawColor
         // result in "Segmentation fault"
+        SDL_Window* window = wm->window;
         SDL_Renderer* renderer = wm->renderer;
+
+	__OnUpdate on_update = wm->on_update;
+	__OnRender on_render = wm->on_render;
+
+	__Events events = wm->events;
 
         while(!quit) {
                 SDL_Event event;
@@ -62,12 +66,12 @@ bool window_manager_render(WindowManager* wm,
 				break;
                         }
 
-                        window_manager_on_event(&event, on_event);
+                        window_manager_on_event(events, &event);
                 }
 
                 // update...
 
-                (*on_update)(dt);
+                on_update(dt);
 
                 // render
 
@@ -77,7 +81,7 @@ bool window_manager_render(WindowManager* wm,
                 // Clear screen
                 SDL_RenderClear(renderer);
 
-                (*on_render)(dt);
+                on_render(dt);
 
                 // Set renderer color red to draw the square
                 SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
@@ -91,18 +95,19 @@ bool window_manager_render(WindowManager* wm,
 		SDL_Delay(1000 / 60);
         }
 
-        // window_manager_render(wm, on_update, on_render);
-
-        window_manager_destroy(wm);
-
-        return quit;
+	window_manager_destroy(window, renderer);
 }
 
-void window_manager_on_event(SDL_Event* e, void (*fn)(void* d0, void* d1))
+void window_manager_on_event(__Events events, SDL_Event* e)
 {
 	switch(e->type) {
 		case SDL_KEYDOWN:
-			(*fn)(&e->key.keysym.sym, NULL);
+			if (events.onkeydown == NULL) break;
+			events.onkeydown(e->key.keysym.sym);
+			break;
+		case SDL_KEYUP:
+			if(events.onkeyup == NULL) break;
+			events.onkeyup(e->key.keysym.sym);
 			break;
 		default:
 			// do nothing...
@@ -110,8 +115,10 @@ void window_manager_on_event(SDL_Event* e, void (*fn)(void* d0, void* d1))
 	}
 }
 
-void window_manager_destroy(WindowManager* wm) {
-	SDL_DestroyRenderer(wm->renderer);
-        SDL_DestroyWindow(wm->window);
+void window_manager_destroy(SDL_Window* window, SDL_Renderer* renderer) {
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+
         SDL_Quit();
 }
+
