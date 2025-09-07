@@ -82,8 +82,8 @@ inline void arr_heap_remove(arr_heap *heap, int i)
 
 inline void arr_heap_destroy(arr_heap *heap)
 {
+    free(heap->data);
     free(heap);
-    heap->size = 0;
 }
 
 inline int arr_heap_child_left(int i)
